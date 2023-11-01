@@ -20,11 +20,13 @@ function getPlayerChoice(){
     
 }
 
-let computerSelection;
+let computerSelection = getComputerChoice();
 let playerSelection;
 let Result;
+let playerScore = 0, computerScore = 0;
 
 function playRound(playerSelection,computerSelection){
+    computerSelection = getComputerChoice();
     let playerMove,computerMove;
     playerSelection = (playerSelection[0].toUpperCase() + playerSelection.slice(1));
     
@@ -38,11 +40,6 @@ function playRound(playerSelection,computerSelection){
 
     else if(playerSelection.length == 5){
         playerMove = 3;
-    }
-
-    else {
-        console.log("Player has not chosen a proper move");
-        return;
     }
 
     if (computerSelection.length == 4){
@@ -71,77 +68,50 @@ function playRound(playerSelection,computerSelection){
 
     switch(Result){
         case 1:
-            console.log("You won! " + playerSelection + " beats " + computerSelection);
+            playerScore += 1
+            results.textContent = ("You won! " + playerSelection + " beats " + computerSelection);
+            score.textContent = ("Score is: " + playerScore + " - " + computerScore)
             break;
         
         case 2:
-            console.log("You lost! " + playerSelection + " loses to " + computerSelection);
+            computerScore += 1
+            results.textContent = ("You lost! " + playerSelection + " loses to " + computerSelection)
+            score.textContent = ("Score is: " + playerScore + " - " + computerScore);
             break;
 
         case 3:
-            console.log("It's a tie! " + playerSelection + " ties with " + computerSelection);
+            results.textContent = ("It's a tie! " + playerSelection + " ties with " + computerSelection)
+            score.textContent = ("Score is: " + playerScore + " - " + computerScore);
             break;
     }
-
-    return(Result);
-}
-
-function game(){
-    let playerScore = 0;
-    let computerScore = 0;
-    let roundResult;
-    for (i = 1; i <= 5; i++) {
-        console.log("Round " + i + " out of 5");
-        let computerSelection = getComputerChoice();
-        let playerSelection = getPlayerChoice();
-        roundResult = playRound(playerSelection,computerSelection);
-        
-        switch(roundResult){
-            case 1:
-                playerScore += 1;
-                break;
-          
-            case 2:
-                computerScore += 1;
-                break;
-
-            case 3:
-                while (roundResult == 3){
-                    console.log("Let's try again!");
-                    let computerSelection = getComputerChoice();
-                    let playerSelection = getPlayerChoice();
-                    roundResult = playRound(playerSelection,computerSelection);
-                    if (roundResult == 1){
-                        playerScore += 1;
-                        break;
-                    }
-
-                    else if (roundResult == 2){
-                        computerScore += 1;
-                        break;
-                    }
-                }
-                break;
-
-        }
-
-        console.log("The score is now: " + playerScore + " - " + computerScore);
-        if (playerScore == 3 || computerScore ==3){
-            break;
-        }
-
-        
-    }
-
-    if (playerScore > computerScore){
-        console.log("Congratulations you have won!")
-    }
-
-    else if (computerScore > playerScore){
-        console.log("You lost! Better luck next time!")
-    }
-
+    scoreBoard();
 
 }
+
+
+function scoreBoard(){
+    if (playerScore == 5){
+        results.textContent = "You won! GG!";
+        playerScore = 0;
+        computerScore = 0;
+    }
+    else if (computerScore ==5){
+        results.textContent = "You lost! boo!"
+        playerScore = 0;
+        computerScore = 0;
+    }
+}
+
+
+const rockBtn = document.getElementById("rockBtn");
+const scissorsBtn = document.getElementById("scissorsBtn");
+const paperBtn = document.getElementById("paperBtn");
+
+rockBtn.addEventListener("click", () => playRound("Rock", computerSelection));
+scissorsBtn.addEventListener("click", () => playRound("Scissors", computerSelection));
+paperBtn.addEventListener("click", () => playRound("Paper", computerSelection));
+
+const results = document.getElementById("results");
+const score = document.getElementById("score");
 
 
